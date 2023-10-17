@@ -20,10 +20,10 @@ public struct UUID7 {
     /// A 48-bit timestamp representing the number of milliseconds since the Unix epoch.
     private var timestamp48bit: Int64
 
-    //- public var uuid: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
+    //- private(set) var uuid: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
 
     /// A string representation of the UUID.
-    public var uuidString: String
+    private(set) var uuidString: String
 
     /// Initializes a new UUID with a current timestamp and random bits.
     public init() {

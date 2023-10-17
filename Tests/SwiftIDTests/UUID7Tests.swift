@@ -1,7 +1,7 @@
 import XCTest
-@testable import UUIDv7
+@testable import SwiftID
 
-final class UUIDv7Tests: XCTestCase {
+final class UUID7Tests: XCTestCase {
     func testExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest
@@ -9,15 +9,10 @@ final class UUIDv7Tests: XCTestCase {
         // Defining Test Cases and Test Methods
         // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
 
-        // Example usage:
-        let uuidParts = UUID7()?.str
-
-        print(uuidParts ?? "_FAILED_TO_GENERATE_UUID_")
-
         for _ in 1...10000 {
-            let uuidParts = UUID7()?.str
+            let uuidParts = UUID7().uuidString
 
-            print(uuidParts ?? "_FAILED_TO_GENERATE_UUID_")
+            print(uuidParts)
         }
     }
 }
