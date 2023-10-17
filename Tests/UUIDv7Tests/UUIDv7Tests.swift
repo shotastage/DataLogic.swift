@@ -11,8 +11,8 @@ final class UUIDv7Tests: XCTestCase {
         
         
         // Example usage:
-        let uuidParts = UUID7()
+        let uuidParts = UUID7()?.str
         
-        print(uuidParts.getStr())
+        print(uuidParts ?? "_FAILED_TO_GENERATE_UUID_")
     }
 }

@@ -2,62 +2,84 @@
 // https://docs.swift.org/swift-book
 
 import Foundation
+
+#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
 import Security
+#else
+import OpenSSL
+#endif
+
 
 public struct UUID7 {
 
     private let VERSION_7: UInt16 = 0x7000
     private let VARIANT_RFC4122: UInt16 = 0x8000
-    
-    private let timestamp = Int64(Date().timeIntervalSince1970 * 1000)
 
-    let unix_ts_ms: UInt32
-    let unix_ts_ms1: UInt32
-    let unix_ts_ms2: UInt32
-    
-    let rand_a: UInt16
-    let rand_b1: UInt16
-    let rand_b2: UInt16
-    let rand_b3: UInt32
-    
-    public init() {
-        unix_ts_ms = UInt32(timestamp & (1 << 48) - 1) // take 48 least significant bits of timestamp
-        unix_ts_ms1 = UInt32((unix_ts_ms >> 16) & 0xffffffff) // take 32 most significant bits of timestamp
-        unix_ts_ms2 = UInt32(unix_ts_ms & 0xffff) // take 16 least significant bits of timestamp
+    // New
+    private let timestamp48bit: Int64
+
+    public let str: String
+
+    public init?() {
+        timestamp48bit = Int64(Date().timeIntervalSince1970 * 1000) & 0x0000_FFFF_FFFF
+
         
-        var randomBytes = [UInt8](repeating: 0, count: 10)
-        _ = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        guard let randomData = UUID7.generateRandomBits(bitCount: 74) else { return nil }
         
-        rand_a = UInt16(bigEndian: Data(randomBytes[0..<2]).withUnsafeBytes { $0.load(as: UInt16.self) })
-        rand_b1 = UInt16(bigEndian: Data(randomBytes[2..<4]).withUnsafeBytes { $0.load(as: UInt16.self) })
-        rand_b2 = UInt16(bigEndian: Data(randomBytes[4..<6]).withUnsafeBytes { $0.load(as: UInt16.self) })
-        rand_b3 = UInt32(bigEndian: Data(randomBytes[6..<10]).withUnsafeBytes { $0.load(as: UInt32.self) })
+        // Convert randomData to UInt64
+        let randomBits: UInt64 = randomData.prefix(8).reversed().enumerated().reduce(0) {
+            $0 + (UInt64($1.element) << (UInt64($1.offset) * 8))
+        }
+        
+        let versionAndVariantSetBits = UUID7.setVersionAndVariantBits(randomBits: randomBits)
+        
+        let timestampHex = String(format: "%012llX", timestamp48bit)
+        let randomBitsHex = String(format: "%018llX", versionAndVariantSetBits)
+        
+        let uuidString = "\(timestampHex)-\(randomBitsHex.prefix(4))-\(randomBitsHex.dropFirst(4))"
+
+        str = uuidString
     }
 
-    private func generate() -> [UInt32] {
+    private static func generateUUIDv7(ts: Int64) -> String? {
+        guard let randomData = generateRandomBits(bitCount: 74) else { return nil }
         
-        let a = rand_a & 0xfff // take 12 bits of 16
-        let b1 = rand_b1 & 0x3fff // take 14 bits of 16
+        // Convert randomData to UInt64
+        let randomBits: UInt64 = randomData.prefix(8).reversed().enumerated().reduce(0) {
+            $0 + (UInt64($1.element) << (UInt64($1.offset) * 8))
+        }
         
-        return [
-            unix_ts_ms1,
-            unix_ts_ms2,
-            UInt32(VERSION_7) | UInt32(a),
-            UInt32(VARIANT_RFC4122) | UInt32(b1),
-            UInt32(rand_b2),
-            rand_b3
-        ]
+        let versionAndVariantSetBits = setVersionAndVariantBits(randomBits: randomBits)
+        
+        let timestampHex = String(format: "%012llX", ts)
+        let randomBitsHex = String(format: "%018llX", versionAndVariantSetBits)
+        
+        let uuidString = "\(timestampHex)-\(randomBitsHex.prefix(4))-\(randomBitsHex.dropFirst(4))"
+        return uuidString
     }
 
-    public func getStr() -> String {
-        let uuidParts = generate()
-            
-            return String(format: "%08x-%04x-%04x-%04x-%04x%08x",
-                          uuidParts[0],
-                          UInt16(uuidParts[1]),
-                          UInt16(uuidParts[2]),
-                          UInt16(uuidParts[3]),
-                          UInt16(uuidParts[4]),
-                          uuidParts[5])
+    private static func generateRandomBits(bitCount: Int) -> Data? {
+        guard bitCount > 0 else { return nil }
+
+        let byteCount = (bitCount + 7) / 8
+        var randomBytes = [UInt8](repeating: 0, count: byteCount)
+
+        #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
+        // On Apple device, use Security framework to enforce SecureEnclave random generation
+        let result = SecRandomCopyBytes(kSecRandomDefault, byteCount, &randomBytes)
+        guard result == errSecSuccess else { return nil }
+        #else
+        // On the other platform, use OpenSSL to generate random
+        let result = RAND_bytes(&randomBytes, Int32(byteCount))
+        guard result == 1 else { return nil }
+        #endif
+        
+        return Data(randomBytes)
+    }
+    
+    private static func setVersionAndVariantBits(randomBits: UInt64) -> UInt64 {
+        let versionBits: UInt64 = 7 << 60  // Version 7
+        let variantBits: UInt64 = 2 << 62  // Variant 1
+        return randomBits | versionBits | variantBits
     }
 }
