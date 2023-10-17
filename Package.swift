@@ -4,20 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "UUIDv7",
+    name: "SwiftID",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "UUIDv7",
-            targets: ["UUIDv7"]),
+            name: "SwiftID",
+            targets: ["SwiftID"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "UUIDv7"),
+            name: "SwiftID"),
         .testTarget(
-            name: "UUIDv7Tests",
-            dependencies: ["UUIDv7"]),
+            name: "SwiftIDTests",
+            dependencies: ["SwiftID"]),
     ]
 )
