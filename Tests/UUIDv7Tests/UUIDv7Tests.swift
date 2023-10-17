@@ -15,7 +15,7 @@ final class UUIDv7Tests: XCTestCase {
         
         print(uuidParts ?? "_FAILED_TO_GENERATE_UUID_")
         
-        for _ in 1...1000 {
+        for _ in 1...10000 {
             let uuidParts = UUID7()?.str
             
             print(uuidParts ?? "_FAILED_TO_GENERATE_UUID_")
