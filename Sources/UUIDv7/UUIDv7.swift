@@ -1,5 +1,9 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+//
+//  UUIDv7.swift
+//
+//  Created by Shota Shimazu on 2023/10/15.
+//  Copyright © 2023 Shota Shimazu. All rights reserved.
+//
 
 import Foundation
 

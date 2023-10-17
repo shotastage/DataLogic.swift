@@ -1,8 +1,8 @@
 //
 //  NewID.swift
 //
-//
 //  Created by Shota Shimazu on 2023/10/17.
+//  Copyright © 2023 Shota Shimazu. All rights reserved.
 //
 
 import Foundation
