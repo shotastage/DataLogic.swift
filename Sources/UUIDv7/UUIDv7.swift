@@ -12,10 +12,6 @@ import OpenSSL
 
 public struct UUID7 {
 
-    private let VERSION_7: UInt16 = 0x7000
-    private let VARIANT_RFC4122: UInt16 = 0x8000
-
-    // New
     private let timestamp48bit: Int64
 
     public let str: String
@@ -23,19 +19,18 @@ public struct UUID7 {
     public init?() {
         timestamp48bit = Int64(Date().timeIntervalSince1970 * 1000) & 0x0000_FFFF_FFFF
 
-        
         guard let randomData = UUID7.generateRandomBits(bitCount: 74) else { return nil }
-        
+
         // Convert randomData to UInt64
         let randomBits: UInt64 = randomData.prefix(8).reversed().enumerated().reduce(0) {
             $0 + (UInt64($1.element) << (UInt64($1.offset) * 8))
         }
-        
+
         let versionAndVariantSetBits = UUID7.setVersionAndVariantBits(randomBits: randomBits)
-        
+
         let timestampHex = String(format: "%012llX", timestamp48bit)
         let randomBitsHex = String(format: "%018llX", versionAndVariantSetBits)
-        
+
         let uuidString = "\(timestampHex)-\(randomBitsHex.prefix(4))-\(randomBitsHex.dropFirst(4))"
 
         str = uuidString
@@ -43,17 +38,17 @@ public struct UUID7 {
 
     private static func generateUUIDv7(ts: Int64) -> String? {
         guard let randomData = generateRandomBits(bitCount: 74) else { return nil }
-        
+
         // Convert randomData to UInt64
         let randomBits: UInt64 = randomData.prefix(8).reversed().enumerated().reduce(0) {
             $0 + (UInt64($1.element) << (UInt64($1.offset) * 8))
         }
-        
+
         let versionAndVariantSetBits = setVersionAndVariantBits(randomBits: randomBits)
-        
+
         let timestampHex = String(format: "%012llX", ts)
         let randomBitsHex = String(format: "%018llX", versionAndVariantSetBits)
-        
+
         let uuidString = "\(timestampHex)-\(randomBitsHex.prefix(4))-\(randomBitsHex.dropFirst(4))"
         return uuidString
     }
@@ -73,10 +68,10 @@ public struct UUID7 {
         let result = RAND_bytes(&randomBytes, Int32(byteCount))
         guard result == 1 else { return nil }
         #endif
-        
+
         return Data(randomBytes)
     }
-    
+
     private static func setVersionAndVariantBits(randomBits: UInt64) -> UInt64 {
         let versionBits: UInt64 = 7 << 60  // Version 7
         let variantBits: UInt64 = 2 << 62  // Variant 1
