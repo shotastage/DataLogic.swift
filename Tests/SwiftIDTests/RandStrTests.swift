@@ -9,15 +9,15 @@ import XCTest
 @testable import SwiftID
 
 final class RandStrTests: XCTestCase {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
-
-        for _ in 1...10000 {
+    func testGenerateCommonRandStr() throws {
+        for _ in 1...1000 {
             print(RandStr(length: 10).idString)
+        }
+    }
+    
+    func testGenerateFullRandStr() throws {
+        for _ in 1...1000 {
+            print(RandStr(length: 20, conditions: [.alphabetic, .numeric, .symbolic]).idString)
         }
     }
 }
