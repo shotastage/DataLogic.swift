@@ -46,12 +46,25 @@ public struct RandStr {
     ///   - conditions: The types of characters to be included in the random string.
     /// - Returns: A string containing a hexadecimal representation of random bytes, or `nil` if an error occurs.
     private static func generateRandomString(length: Int, conditions: [TextConditions]) -> String? {
-        let characters = Array("abcdefghijklmnopqrstuvwxyz")  // Array of alphabetic characters.
+        let alphabets = Array("abcdefghijklmnopqrstuvwxyz")  // Array of alphabetic characters.
         
-        let numericChar = Array("0123456789")  // Array of numeric characters.
+        let numerics = Array("0123456789")  // Array of numeric characters.
 
         let symbols = Array("!@#$%&*()-_+=^[]{}\\|;:'\"?/.>,<")  // Array of symbolic characters.
 
+        var charList = Array("")
+
+        for condition in conditions {
+            switch condition {
+            case .alphabetic:
+                charList += alphabets
+            case .numeric:
+                charList += numerics
+            case .symbolic:
+                charList += symbols
+            }
+        }
+        
         // An array to hold the random byte values.
         var randomBytes = [UInt8](repeating: 0, count: length)
         
@@ -62,6 +75,6 @@ public struct RandStr {
         guard result == errSecSuccess else { return nil }
 
         // Mapping the random bytes to alphabetic characters and joining them to form a string.
-        return randomBytes.map { String(characters[Int($0) % characters.count]) }.joined()
+        return randomBytes.map { String(charList[Int($0) % charList.count]) }.joined()
     }
 }
