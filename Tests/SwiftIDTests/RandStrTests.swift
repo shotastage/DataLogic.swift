@@ -14,10 +14,22 @@ final class RandStrTests: XCTestCase {
             print(RandStr(length: 10).idString)
         }
     }
-    
+
     func testGenerateFullRandStr() throws {
         for _ in 1...1000 {
             print(RandStr(length: 20, conditions: [.alphabetic, .numeric, .symbolic]).idString)
+        }
+    }
+
+    func testOnlyNumeric() throws {
+        for _ in 1...1000 {
+            print(RandStr(length: 20, conditions: [.numeric]).idString)
+        }
+    }
+
+    func testOnlyAlphabets() throws {
+        for _ in 1...1000 {
+            print(RandStr(length: 20, conditions: [.alphabetic]).idString)
         }
     }
 }

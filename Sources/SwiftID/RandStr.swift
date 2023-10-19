@@ -40,6 +40,10 @@ public struct RandStr {
         self.idString = RandStr.generateRandomString(length: length, conditions: conditions)!
     }
 
+    public func getAsNumber() -> Int? {
+        Int(self.idString) ?? 0
+    }
+
     /// Generates a random string of the specified length based on the specified conditions.
     /// - Parameters:
     ///   - length: The length of the random string in bytes.
@@ -47,7 +51,7 @@ public struct RandStr {
     /// - Returns: A string containing a hexadecimal representation of random bytes, or `nil` if an error occurs.
     private static func generateRandomString(length: Int, conditions: [TextConditions]) -> String? {
         let alphabets = Array("abcdefghijklmnopqrstuvwxyz")  // Array of alphabetic characters.
-        
+
         let numerics = Array("0123456789")  // Array of numeric characters.
 
         let symbols = Array("!@#$%&*()-_+=^[]{}\\|;:'\"?/.>,<")  // Array of symbolic characters.
@@ -64,10 +68,10 @@ public struct RandStr {
                 charList += symbols
             }
         }
-        
+
         // An array to hold the random byte values.
         var randomBytes = [UInt8](repeating: 0, count: length)
-        
+
         // Generating random bytes using the Security framework.
         let result = SecRandomCopyBytes(kSecRandomDefault, length, &randomBytes)
 
