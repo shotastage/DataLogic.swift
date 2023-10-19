@@ -16,24 +16,52 @@ import OpenSSL
 /// `RandStr` is a struct for creating and managing random strings.
 public struct RandStr {
 
+    /// An enumeration defining the types of characters that can be included in the random string.
+    public enum TextConditions {
+        case numeric        // Allow numeric characters.
+        case alphabetic     // Allow alphabetic characters.
+        case symbolic       // Allow symbolic characters.
+    }
+
     /// A string containing a hexadecimal representation of random bytes.
     private(set) var idString: String
 
     /// Initializes a new `RandStr` instance with a specified length for the random string.
     /// - Parameter length: The length of the random string in bytes.
     init(length: Int) {
-        self.idString = RandStr.generateRandomString(length: length)!
+        self.idString = RandStr.generateRandomString(length: length, conditions: [.alphabetic, .numeric])!
     }
 
-    /// Generates a random string of the specified length.
-    /// - Parameter length: The length of the random string in bytes.
+    /// Initializes a new `RandStr` instance with a specified length and conditions for the random string.
+    /// - Parameters:
+    ///   - length: The length of the random string in bytes.
+    ///   - conditions: The types of characters to be included in the random string.
+    init(length: Int, conditions: [TextConditions]) {
+        self.idString = RandStr.generateRandomString(length: length, conditions: conditions)!
+    }
+
+    /// Generates a random string of the specified length based on the specified conditions.
+    /// - Parameters:
+    ///   - length: The length of the random string in bytes.
+    ///   - conditions: The types of characters to be included in the random string.
     /// - Returns: A string containing a hexadecimal representation of random bytes, or `nil` if an error occurs.
-    private static func generateRandomString(length: Int) -> String? {
+    private static func generateRandomString(length: Int, conditions: [TextConditions]) -> String? {
+        let characters = Array("abcdefghijklmnopqrstuvwxyz")  // Array of alphabetic characters.
+        
+        let numericChar = Array("0123456789")  // Array of numeric characters.
+
+        let symbols = Array("!@#$%&*()-_+=^[]{}\\|;:'\"?/.>,<")  // Array of symbolic characters.
+
+        // An array to hold the random byte values.
         var randomBytes = [UInt8](repeating: 0, count: length)
+        
+        // Generating random bytes using the Security framework.
         let result = SecRandomCopyBytes(kSecRandomDefault, length, &randomBytes)
 
+        // Checking the result of the random bytes generation.
         guard result == errSecSuccess else { return nil }
 
-        return randomBytes.map { String(format: "%02hhx", $0) }.joined()
+        // Mapping the random bytes to alphabetic characters and joining them to form a string.
+        return randomBytes.map { String(characters[Int($0) % characters.count]) }.joined()
     }
 }
