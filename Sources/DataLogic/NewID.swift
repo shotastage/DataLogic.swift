@@ -61,7 +61,21 @@ public struct NewID {
     /// Generates random bits of specified bit count.
     /// - Parameter bitCount: The number of random bits to generate.
     /// - Returns: A `Data` object containing the random bits, or `nil` if an error occurs.
-    private static func generateRandomBits(bitCount: Int) -> Data? {
+    private static func generateFastRandomBits(bitCount: Int) -> Data? {
+        guard bitCount > 0 else { return nil }
+
+        let byteCount = (bitCount + 7) / 8
+        var randomBytes = [UInt8](repeating: 0, count: byteCount)
+
+        let ss = Xorshift(seed: randomBytes).random()
+
+        return Data(randomBytes)
+    }
+
+    /// Generates random bits of specified bit count.
+    /// - Parameter bitCount: The number of random bits to generate.
+    /// - Returns: A `Data` object containing the random bits, or `nil` if an error occurs.
+    private static func generateSecureRandomBits(bitCount: Int) -> Data? {
         guard bitCount > 0 else { return nil }
 
         let byteCount = (bitCount + 7) / 8

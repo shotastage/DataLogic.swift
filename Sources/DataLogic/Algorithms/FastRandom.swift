@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct Xorshift64 {
+    private var state: UInt64
+}
+
 
 struct Xorshift {
     private var state: UInt32

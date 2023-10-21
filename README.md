@@ -1,4 +1,4 @@
-# SwiftID
+# Swift DataLogic
 
 >> Now under construction...
 
