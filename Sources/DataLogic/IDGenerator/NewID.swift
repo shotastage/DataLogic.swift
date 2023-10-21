@@ -67,7 +67,7 @@ public struct NewID {
         let byteCount = (bitCount + 7) / 8
         var randomBytes = [UInt8](repeating: 0, count: byteCount)
 
-        let ss = Xorshift(seed: randomBytes).random()
+        //- let ss = Xorshift(seed: randomBytes).random()
 
         return Data(randomBytes)
     }

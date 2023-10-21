@@ -7,6 +7,10 @@
 
 import Foundation
 
+public struct NewFastRand {
+    
+}
+
 struct Xorshift64 {
     private var state: UInt64
 }
