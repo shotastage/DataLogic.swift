@@ -1,5 +1,5 @@
 //
-//  TNRP.swift
+//  TRNG.swift
 //
 //
 //  Created by Shota Shimazu on 2023/10/21.
@@ -14,7 +14,14 @@ import OpenSSL
 #endif
 
 
-public struct TNRP {
+public struct OnDeviceRandom {
+    
+    private(set) random: UInt64
+    
+    init(length: UInt64) {
+        random = 0
+    }
+
     /// Generates random bits of specified bit count.
     /// - Parameter bitCount: The number of random bits to generate.
     /// - Returns: A `Data` object containing the random bits, or `nil` if an error occurs.
