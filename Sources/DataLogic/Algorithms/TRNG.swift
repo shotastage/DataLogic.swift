@@ -14,33 +14,30 @@ import OpenSSL
 #endif
 
 
-public struct OnDeviceRandom {
-    
-    private(set) random: UInt64
-    
-    init(length: UInt64) {
-        random = 0
+public struct OnChipTRNG {
+
+    private(set) var random: String
+
+    init?(length: Int) {
+        guard let rand = OnChipTRNG.generateRandomNumber(digits: length) else {
+            return nil
+        }
+        random = rand
     }
 
-    /// Generates random bits of specified bit count.
-    /// - Parameter bitCount: The number of random bits to generate.
-    /// - Returns: A `Data` object containing the random bits, or `nil` if an error occurs.
-    private static func generateRandomBits(bitCount: Int) -> Data? {
-        guard bitCount > 0 else { return nil }
+    private static func generateRandomNumber(digits: Int) -> String? {
+        guard digits > 0 else { return nil }
 
-        let byteCount = (bitCount + 7) / 8
+        let byteCount = (digits + 1) / 2 // 1 byte can represent 2 hexadecimal digits
         var randomBytes = [UInt8](repeating: 0, count: byteCount)
 
-        #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
-        // On Apple device, use Security framework to enforce SecureEnclave random generation
-        let result = SecRandomCopyBytes(kSecRandomDefault, byteCount, &randomBytes)
-        guard result == errSecSuccess else { return nil }
-        #else
-        // On the other platform, use OpenSSL to generate random
-        let result = RAND_bytes(&randomBytes, Int32(byteCount))
-        guard result == 1 else { return nil }
-        #endif
+        let status = SecRandomCopyBytes(kSecRandomDefault, byteCount, &randomBytes)
+        guard status == errSecSuccess else { return nil }
 
-        return Data(randomBytes)
+        let hexString = randomBytes.map { String(format: "%02x", $0) }.joined()
+        let startIndex = hexString.startIndex
+        let endIndex = hexString.index(startIndex, offsetBy: digits)
+
+        return String(hexString[startIndex..<endIndex])
     }
 }
