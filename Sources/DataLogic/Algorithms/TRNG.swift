@@ -14,12 +14,12 @@ import OpenSSL
 #endif
 
 
-public struct OnDeviceTRNG {
+public struct OnChipTRNG {
 
     private(set) var random: String
 
     init?(length: Int) {
-        guard let rand = OnDeviceTRNG.generateRandomNumber(digits: length) else {
+        guard let rand = OnChipTRNG.generateRandomNumber(digits: length) else {
             return nil
         }
         random = rand
