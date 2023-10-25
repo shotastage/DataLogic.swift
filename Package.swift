@@ -11,6 +11,9 @@ let package = Package(
             name: "DataLogic",
             targets: ["DataLogic"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/google/swift-benchmark", from: "0.1.2"),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
@@ -19,5 +22,11 @@ let package = Package(
         .testTarget(
             name: "DataLogicTests",
             dependencies: ["DataLogic"]),
+        .executableTarget(
+            name: "datalogic-benchmark",
+            dependencies: [
+                "DataLogic",
+                .product(name: "Benchmark", package: "swift-benchmark"),
+            ]),
     ]
 )
