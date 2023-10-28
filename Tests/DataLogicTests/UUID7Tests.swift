@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwiftID
+@testable import DataLogic
 
 final class UUID7Tests: XCTestCase {
     func testExample() throws {
