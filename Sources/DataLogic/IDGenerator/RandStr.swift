@@ -24,11 +24,11 @@ public struct RandStr {
     }
 
     /// A string containing a hexadecimal representation of random bytes.
-    private(set) var idString: String
+    private(set) public var idString: String
 
     /// Initializes a new `RandStr` instance with a specified length for the random string.
     /// - Parameter length: The length of the random string in bytes.
-    init(length: Int) {
+    public init(length: Int) {
         self.idString = RandStr.generateRandomString(length: length, conditions: [.alphabetic, .numeric])!
     }
 
@@ -36,7 +36,7 @@ public struct RandStr {
     /// - Parameters:
     ///   - length: The length of the random string in bytes.
     ///   - conditions: The types of characters to be included in the random string.
-    init(length: Int, conditions: [TextConditions]) {
+    public init(length: Int, conditions: [TextConditions]) {
         self.idString = RandStr.generateRandomString(length: length, conditions: conditions)!
     }
 

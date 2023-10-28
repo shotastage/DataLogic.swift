@@ -5,6 +5,7 @@
 //  Created by Shota Shimazu on 2023/10/25.
 //
 
+import DataLogic
 import Benchmark
 
 let N = 10000
@@ -14,12 +15,11 @@ var stringWithReservedCapacity: String = ""
 
 
 benchmark("Random Text Generation") {
-    let randomText = (0..<N).map { _ in
-        String((0..<10).map { _ in
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".randomElement()!
-        })
-    }.joined()
-    precondition(randomText.count == N * 10)
+    for _ in 1...10000 {
+        let rand = RandStr(length: 20, conditions: [.alphabetic, .numeric, .symbolic]).idString
+
+        print(rand)
+    }
 }
 
 Benchmark.main()

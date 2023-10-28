@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import SwiftID
+@testable import DataLogic
 
 final class RandStrTests: XCTestCase {
     func testGenerateFullRandStr() throws {
