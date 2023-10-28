@@ -9,6 +9,10 @@ import Foundation
 
 #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
 import Security
+#elseif os(Linux)
+import UnixTPM
+#elseif os(Windows)
+import NtTPM
 #else
 import OpenSSL
 #endif
