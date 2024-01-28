@@ -8,14 +8,12 @@
 import Foundation
 
 #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
-import Security
+    import Security
 #else
-import OpenSSL
+    import OpenSSL
 #endif
 
-
 public struct NewID {
-
     public enum Reliability {
         case weak
         case medium
@@ -52,7 +50,6 @@ public struct NewID {
         // Apply the bitmask using the bitwise AND operator.
         let top41Bits = shiftedTimestamp & bitmask
 
-        
         id = (UInt64(top41Bits), 1, 1)
 
         idString = ""
@@ -67,7 +64,7 @@ public struct NewID {
         let byteCount = (bitCount + 7) / 8
         var randomBytes = [UInt8](repeating: 0, count: byteCount)
 
-        //- let ss = Xorshift(seed: randomBytes).random()
+        // - let ss = Xorshift(seed: randomBytes).random()
 
         return Data(randomBytes)
     }
@@ -82,13 +79,13 @@ public struct NewID {
         var randomBytes = [UInt8](repeating: 0, count: byteCount)
 
         #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
-        // On Apple device, use Security framework to enforce SecureEnclave random generation
-        let result = SecRandomCopyBytes(kSecRandomDefault, byteCount, &randomBytes)
-        guard result == errSecSuccess else { return nil }
+            // On Apple device, use Security framework to enforce SecureEnclave random generation
+            let result = SecRandomCopyBytes(kSecRandomDefault, byteCount, &randomBytes)
+            guard result == errSecSuccess else { return nil }
         #else
-        // On the other platform, use OpenSSL to generate random
-        let result = RAND_bytes(&randomBytes, Int32(byteCount))
-        guard result == 1 else { return nil }
+            // On the other platform, use OpenSSL to generate random
+            let result = RAND_bytes(&randomBytes, Int32(byteCount))
+            guard result == 1 else { return nil }
         #endif
 
         return Data(randomBytes)

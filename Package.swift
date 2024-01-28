@@ -9,7 +9,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "DataLogic",
-            targets: ["DataLogic"]),
+            targets: ["DataLogic"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/google/swift-benchmark", from: "0.1.2"),
@@ -21,12 +22,14 @@ let package = Package(
             name: "DataLogic"),
         .testTarget(
             name: "DataLogicTests",
-            dependencies: ["DataLogic"]),
+            dependencies: ["DataLogic"]
+        ),
         .executableTarget(
             name: "datalogic-benchmark",
             dependencies: [
                 "DataLogic",
                 .product(name: "Benchmark", package: "swift-benchmark"),
-            ]),
+            ]
+        ),
     ]
 )

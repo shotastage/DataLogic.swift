@@ -8,25 +8,43 @@
 import Foundation
 
 #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
-import Security
+    import Security
 #elseif os(Linux)
-import UnixTPM
+    import UnixTPM
 #elseif os(Windows)
-import NtTPM
+    import NtTPM
 #else
-import OpenSSL
+    import OpenSSL
 #endif
 
+public struct SecureTRNG {
+    private(set) var random: RandomValue
 
-public struct OnChipTRNG {
-
-    private(set) var random: String
-
-    init?(length: Int) {
-        guard let rand = OnChipTRNG.generateRandomNumber(digits: length) else {
+    /// String random
+    public init?(length: Int) {
+        guard let rand = SecureTRNG.generateRandomNumber(digits: length) else {
             return nil
         }
-        random = rand
+        random = RandomValue.string(rand)
+    }
+
+    /// Double random number
+    public init?(range: Range<Double>) {
+        guard let randDouble = SecureTRNG.generateSecureRandomDouble() else {
+            return nil
+        }
+        let scale = Double(UInt32.max) + 1
+        let scaledRandom = randDouble / scale
+        let diff = range.upperBound - range.lowerBound
+        let randomInRange = (scaledRandom * diff) + range.lowerBound
+        random = RandomValue.double(randomInRange)
+    }
+
+    private static func generateSecureRandomDouble() -> Double? {
+        var randomUInt32 = UInt32()
+        let status = SecRandomCopyBytes(kSecRandomDefault, MemoryLayout.size(ofValue: randomUInt32), &randomUInt32)
+        guard status == errSecSuccess else { return nil }
+        return Double(randomUInt32)
     }
 
     private static func generateRandomNumber(digits: Int) -> String? {
@@ -42,6 +60,6 @@ public struct OnChipTRNG {
         let startIndex = hexString.startIndex
         let endIndex = hexString.index(startIndex, offsetBy: digits)
 
-        return String(hexString[startIndex..<endIndex])
+        return String(hexString[startIndex ..< endIndex])
     }
 }

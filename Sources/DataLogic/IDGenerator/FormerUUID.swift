@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 public struct UUID1 {
     init() {
         print("Currentry, not supported!")
@@ -15,7 +14,6 @@ public struct UUID1 {
 }
 
 public struct UUID4 {
-
     private(set) var uuid: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
 
     private(set) var uuidString: String
@@ -23,9 +21,9 @@ public struct UUID4 {
     private(set) var uuidBridgedObject: UUID
 
     public init() {
-        self.uuidBridgedObject = UUID()
+        uuidBridgedObject = UUID()
 
-        self.uuidString = self.uuidBridgedObject.uuidString
-        self.uuid = self.uuidBridgedObject.uuid
+        uuidString = uuidBridgedObject.uuidString
+        uuid = uuidBridgedObject.uuid
     }
 }
