@@ -18,14 +18,14 @@ import Foundation
 #endif
 
 public struct SecureTRNG {
-    private(set) var random: RandomValue
+    public var random: RandomValue
 
     /// String random
     public init?(length: Int) {
         guard let rand = SecureTRNG.generateRandomNumber(digits: length) else {
             return nil
         }
-        random = RandomValue.string(rand)
+        random = RandomValue.string(rand)        
     }
 
     /// Double random number
