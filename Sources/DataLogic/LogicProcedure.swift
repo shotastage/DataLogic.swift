@@ -12,12 +12,12 @@ protocol LogicProcedure {
     associatedtype Output
 
     var input: Input? { get set }
-    var output: Output { get set }
+    var value: Output { get set }
 
     mutating func execute() -> Output?
 }
 
-enum ProcedureOutput<Value> {
+public enum ProcedureOutput<Value> {
     case value(Value)
     case void
 }

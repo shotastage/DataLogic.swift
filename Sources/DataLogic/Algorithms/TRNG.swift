@@ -19,23 +19,24 @@ import Foundation
 
 enum SecureTRNGType {
     case int(Int)
-    case range(Range<Int>)
+    case range(ClosedRange<Double>)
 }
 
 public struct SecureTRNG: LogicProcedure {
+    
     var input: SecureTRNGType?
-    var output: ProcedureOutput<RandomValue>
+    public var value: ProcedureOutput<RandomValue>
 
     /// String random
     public init?(length: Int) {
         guard let rand = SecureTRNG.generateRandomNumber(digits: length) else {
             return nil
         }
-        output = .value(RandomValue.string(rand))
+        value = .value(RandomValue.string(rand))
     }
 
     /// Double random number
-    public init?(range: Range<Double>) {
+    public init?(range: ClosedRange<Double>) {
         guard let randDouble = SecureTRNG.generateSecureRandomDouble() else {
             return nil
         }
@@ -43,7 +44,7 @@ public struct SecureTRNG: LogicProcedure {
         let scaledRandom = randDouble / scale
         let diff = range.upperBound - range.lowerBound
         let randomInRange = (scaledRandom * diff) + range.lowerBound
-        output = .value(RandomValue.double(randomInRange))
+        value = .value(RandomValue.double(randomInRange))
     }
 
     mutating func execute() -> ProcedureOutput<RandomValue>? {
