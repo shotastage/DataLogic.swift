@@ -8,14 +8,16 @@
 import Foundation
 
 protocol LogicProcedure {
-    var into: Any { get set }
-    var out: Any { get set }
-    var procedure: () -> Void { get set }
-    func `do`()
+    associatedtype Input
+    associatedtype Output
+
+    var input: Input? { get set }
+    var output: Output { get set }
+
+    mutating func execute() -> Output?
 }
 
-extension LogicProcedure {
-    func `do`() {
-        //
-    }
+enum ProcedureOutput<Value> {
+    case value(Value)
+    case void
 }

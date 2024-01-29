@@ -17,15 +17,21 @@ import Foundation
     import OpenSSL
 #endif
 
-public struct SecureTRNG {
-    public var random: RandomValue
+enum SecureTRNGType {
+    case int(Int)
+    case range(Range<Int>)
+}
+
+public struct SecureTRNG: LogicProcedure {
+    var input: SecureTRNGType?
+    var output: ProcedureOutput<RandomValue>
 
     /// String random
     public init?(length: Int) {
         guard let rand = SecureTRNG.generateRandomNumber(digits: length) else {
             return nil
         }
-        random = RandomValue.string(rand)        
+        output = .value(RandomValue.string(rand))
     }
 
     /// Double random number
@@ -37,7 +43,11 @@ public struct SecureTRNG {
         let scaledRandom = randDouble / scale
         let diff = range.upperBound - range.lowerBound
         let randomInRange = (scaledRandom * diff) + range.lowerBound
-        random = RandomValue.double(randomInRange)
+        output = .value(RandomValue.double(randomInRange))
+    }
+
+    mutating func execute() -> ProcedureOutput<RandomValue>? {
+        return .void
     }
 
     private static func generateSecureRandomDouble() -> Double? {
