@@ -23,7 +23,6 @@ enum SecureTRNGType {
 }
 
 public struct SecureTRNG: LogicProcedure {
-    
     var input: SecureTRNGType?
     public var value: ProcedureOutput<RandomValue>
 

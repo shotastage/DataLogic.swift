@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  LogicProcedure.swift
+//
 //
 //  Created by Shota Shimazu on 2024/01/28.
 //
