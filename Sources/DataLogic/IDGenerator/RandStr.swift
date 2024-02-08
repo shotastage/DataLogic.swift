@@ -7,7 +7,7 @@
 import Foundation
 
 // Conditionally import Security or OpenSSL based on the platform.
-#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS) || os(visionOS)
     import Security
 #else
     import OpenSSL

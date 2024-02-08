@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS) || os(visionOS)
     import Security
 #elseif os(Linux)
     import UnixTPM

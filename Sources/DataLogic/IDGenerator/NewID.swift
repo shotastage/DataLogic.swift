@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS) || os(visionOS)
     import Security
 #else
     import OpenSSL
@@ -78,7 +78,7 @@ public struct NewID {
         let byteCount = (bitCount + 7) / 8
         var randomBytes = [UInt8](repeating: 0, count: byteCount)
 
-        #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS) || os(visionOS)
             // On Apple device, use Security framework to enforce SecureEnclave random generation
             let result = SecRandomCopyBytes(kSecRandomDefault, byteCount, &randomBytes)
             guard result == errSecSuccess else { return nil }
