@@ -26,7 +26,7 @@ public struct ConcurrentSUM: LogicProcedure {
         // If input is empty
         guard !numbers.isEmpty else { return 0.0 }
 
-        // 使用するチャンク数を決定（利用可能なプロセッサ数と配列の長さに基づく）
+        // Decide how many chunks to use (based on number of available processors and array length)
         let processorCount = ProcessInfo.processInfo.activeProcessorCount
         let chunkSize = max(1, numbers.count / processorCount)
         let chunks = numbers.count / chunkSize + (numbers.count % chunkSize > 0 ? 1 : 0)
@@ -41,7 +41,7 @@ public struct ConcurrentSUM: LogicProcedure {
             partialSums[index] = chunkSum
         }
 
-        // 部分合計を集約
+        // Aggregate partial totals
         return partialSums.reduce(0.0, +)
     }
 }
