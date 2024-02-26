@@ -5,6 +5,11 @@ import PackageDescription
 
 let package = Package(
     name: "DataLogic",
+    platforms: [
+        .macOS(.v13),
+        //.custom("DEB_UBUNTU_Linux", versionString: "22_04"),
+        //.custom("NT_Kernel", versionString: "11_22H2"),
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
